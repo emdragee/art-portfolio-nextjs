@@ -1,51 +1,35 @@
-'use client'; // Enable client-side features
+'use client';
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { Artwork, digitalArtworks, physicalArtworks } from './artworksData';
 
-// Define a unified type for all artworks
-type Artwork = {
-  title: string;
-  image: string;
-  description: string;
-  software?: string; // Optional for digital artworks
-  medium?: string; // Optional for physical artworks
-};
+export default function LightboxGallery() {
+  const [isOpen, setIsOpen] = useState(false); // Tracks modal state
+  const [currentIndex, setCurrentIndex] = useState(0); // Tracks current image index
 
-// Digital artworks data
-const digitalArtworks: Artwork[] = [
-  {
-    title: 'Digital Artwork 1',
-    image: 'https://dummyimage.com/600x400/000/fff',
-    software: 'Adobe Fresco',
-    description: 'A digital painting of a surreal landscape.',
-  },
-  {
-    title: 'Digital Artwork 2',
-    image: 'https://dummyimage.com/600x400/000/fff',
-    software: 'Adobe Fresco',
-    description: 'Abstract digital art inspired by dreams.',
-  },
-];
+  // Combine all artworks for lightbox navigation
+  const gallery = [...digitalArtworks, ...physicalArtworks];
 
-// Physical artworks data
-const physicalArtworks: Artwork[] = [
-  {
-    title: 'Physical Artwork 1',
-    image: 'https://dummyimage.com/600x400/000/fff',
-    description: 'An acrylic painting on canvas.',
-  },
-  {
-    title: 'Physical Artwork 2',
-    image: 'https://dummyimage.com/600x400/000/fff',
-    medium: 'Watercolor',
-    description: 'A watercolor piece inspired by nature.',
-  },
-];
+  const openLightbox = (index: number) => {
+    setCurrentIndex(index);
+    setIsOpen(true);
+  };
 
-export default function ArtworksPage() {
+  const closeLightbox = () => {
+    setIsOpen(false);
+  };
+
+  const showNext = () => {
+    setCurrentIndex((currentIndex + 1) % gallery.length);
+  };
+
+  const showPrevious = () => {
+    setCurrentIndex((currentIndex - 1 + gallery.length) % gallery.length);
+  };
+
   return (
-    <section className="max-w-4xl mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-8">My Artworks</h1>
+    <div className="max-w-7xl mx-auto px-4 py-24">
+      <h1 className="text-4xl font-bold mb-8 text-center">My Artworks</h1>
 
       {/* Digital Artworks Section */}
       <div className="mb-12">
@@ -58,6 +42,7 @@ export default function ArtworksPage() {
               image={art.image}
               software={art.software}
               description={art.description}
+              onClick={() => openLightbox(index)}
             />
           ))}
         </div>
@@ -74,25 +59,82 @@ export default function ArtworksPage() {
               image={art.image}
               medium={art.medium}
               description={art.description}
+              onClick={() => openLightbox(digitalArtworks.length + index)}
             />
           ))}
         </div>
       </div>
-    </section>
+
+      {/* Modal */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          <div
+            className="relative max-w-4xl w-full"
+            onClick={(e) => e.stopPropagation()} // Prevent modal close on inner click
+          >
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 text-white text-4xl"
+              onClick={closeLightbox}
+            >
+              &times;
+            </button>
+
+            {/* Image */}
+            <img
+              src={gallery[currentIndex].image}
+              alt={gallery[currentIndex].title}
+              className="w-full h-auto object-contain rounded-lg"
+            />
+
+            {/* Navigation Arrows */}
+            <button
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/10 text-white rounded-full p-2 hover:bg-white/20"
+              onClick={(e) => {
+                e.stopPropagation();
+                showPrevious();
+              }}
+            >
+              &#8592; {/* Left Arrow */}
+            </button>
+            <button
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/10 text-white rounded-full p-2 hover:bg-white/20"
+              onClick={(e) => {
+                e.stopPropagation();
+                showNext();
+              }}
+            >
+              &#8594; {/* Right Arrow */}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
-// ArtworkCard Component
+// Artwork Card Component
 function ArtworkCard({
   title,
   image,
   description,
   software,
   medium,
-}: Artwork) {
+  onClick,
+}: Artwork & { onClick: () => void }) {
   return (
-    <div className="border overflow-hidden shadow-lg">
-      <img src={image} alt={title} className="w-full h-60 object-cover" />
+    <div
+      className="border overflow-hidden shadow-lg cursor-pointer"
+      onClick={onClick}
+    >
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-60 object-cover"
+      />
       <div className="p-4">
         <h3 className="text-lg font-bold mb-2">{title}</h3>
         {software && (

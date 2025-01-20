@@ -154,3 +154,8 @@ table {
 .title {
   text-wrap: balance;
 }
+
+/* Popup art */
+.popup-img{
+  padding: 10rem;
+}
