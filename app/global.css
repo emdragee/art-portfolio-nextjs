@@ -156,6 +156,6 @@ table {
 }
 
 /* Popup art */
-.popup-img{
-  padding: 10rem;
+.popup-img-height{
+  max-height: 95dvh;
 }

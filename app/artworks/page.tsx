@@ -31,23 +31,6 @@ export default function LightboxGallery() {
     <div className="max-w-7xl mx-auto px-4 py-24">
       <h1 className="text-4xl font-bold mb-8 text-center">My Artworks</h1>
 
-      {/* Digital Artworks Section */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Digital Artworks</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {digitalArtworks.map((art, index) => (
-            <ArtworkCard
-              key={index}
-              title={art.title}
-              image={art.image}
-              software={art.software}
-              description={art.description}
-              onClick={() => openLightbox(index)}
-            />
-          ))}
-        </div>
-      </div>
-
       {/* Physical Artworks Section */}
       <div className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">Physical Artworks</h2>
@@ -60,6 +43,24 @@ export default function LightboxGallery() {
               medium={art.medium}
               description={art.description}
               onClick={() => openLightbox(digitalArtworks.length + index)}
+            />
+          ))}
+        </div>
+      </div>
+
+      
+      {/* Digital Artworks Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold mb-4">Digital Artworks</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {digitalArtworks.map((art, index) => (
+            <ArtworkCard
+              key={index}
+              title={art.title}
+              image={art.image}
+              software={art.software}
+              description={art.description}
+              onClick={() => openLightbox(index)}
             />
           ))}
         </div>
@@ -87,7 +88,7 @@ export default function LightboxGallery() {
             <img
               src={gallery[currentIndex].image}
               alt={gallery[currentIndex].title}
-              className="w-full h-auto object-contain rounded-lg"
+              className="w-full popup-img-height  object-contain rounded-lg"
             />
 
             {/* Navigation Arrows */}
