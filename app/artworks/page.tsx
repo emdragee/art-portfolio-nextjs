@@ -42,6 +42,7 @@ export default function LightboxGallery() {
               image={art.image}
               medium={art.medium}
               description={art.description}
+              date={art.date}
               onClick={() => openLightbox(digitalArtworks.length + index)}
             />
           ))}
@@ -60,6 +61,7 @@ export default function LightboxGallery() {
               image={art.image}
               software={art.software}
               description={art.description}
+              date={art.date}
               onClick={() => openLightbox(index)}
             />
           ))}
@@ -124,6 +126,7 @@ function ArtworkCard({
   description,
   software,
   medium,
+  date,
   onClick,
 }: Artwork & { onClick: () => void }) {
   return (
@@ -150,7 +153,13 @@ function ArtworkCard({
             {medium}
           </p>
         )}
-        <p className="text-sm text-gray-600">{description}</p>
+        <p className="text-sm text-gray-600 mb-2">{description}</p>
+        <div>
+      <p className="text-sm text-gray-500 mb-2">
+          <span className="font-bold">Date: </span>
+          {date}
+        </p>
+      </div>
       </div>
     </div>
   );
